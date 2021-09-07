@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title><%= htmlWebpackPlugin.options.title %></title>
+  </head>
+  <body>
+    <div id="sounds">
+      <img src="<%= require('./imgs/SOUND_ON.png') %>" alt="sound" id="sound">
+    </div>
+    <div id="gameover">
+        <img src="<%= require('./imgs/youwon.png') %>" alt="youwon" id="youwon">
+        <img src="<%= require('./imgs/gameover.png') %>" alt="gameover" id="youlose">
+        <div id="restart">Play Again</div>!
+    </div>
+    <canvas id="breckout" width="400px" height="500"></canvas>
+  </body>
+</html>
