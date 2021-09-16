@@ -24,6 +24,7 @@ const LEVEL_MAX = 3;
 let GAME_OVER = false;
 let leftArrow = false;
 let rightArrow = false;
+let SOUND_IMG = components.SOUND_ON;
 
 
 // CREATE PADDLE
@@ -66,6 +67,12 @@ function movePaddle(){
     }
 }
 
+// RESET PADDLE
+function resetPaddle() {
+    paddle.x = cvs.width/2 - PADDLE_WIDTH/2,
+    paddle.y = cvs.height - PADDLE_MARGIN_BOTTOM - PADDLE_HEIGHT
+}
+
 // CREATE BALL
 const ball = {
         x: cvs.width /2,
@@ -104,6 +111,7 @@ function ballWallCollision(){
         }
         if(ball.y + ball.radius > cvs.height){
             LIFE--;
+            resetPaddle();
             resetBall();
     }
 }
@@ -239,6 +247,7 @@ function levelUp() {
         brick.row++;
         createBricks();
         ball.speed += 0.5;
+        resetPaddle();
         resetBall();
         LEVEL++;
     }
@@ -259,7 +268,10 @@ function draw() {
     // show life
     showGameStats(LIFE, cvs.width - 25, 25, components.LIFE_IMG, cvs.width - 55, 5);
     // show level
-    showGameStats(LEVEL, cvs.width/2, 25, components.LEVEL_IMG, cvs.width/2 - 30, 5);
+    showGameStats(LEVEL, cvs.width / 2, 25, components.LEVEL_IMG, cvs.width / 2 - 30, 5);
+    // show sound on/off
+    showGameStats('', cvs.width / 2, 25, SOUND_IMG , 20 , cvs.height - 35);
+
 
 
 }
@@ -300,18 +312,19 @@ loop();
 
 // SELECT SOUND ELEMENT
 
-const soundElement = document.getElementById('sound');
 
-soundElement.addEventListener('click', audioManager);
+cvs.addEventListener('click', function (e) {
+    let elemLeft = cvs.offsetLeft - 200;
+    let elemTop = cvs.offsetTop - 250 ;
+    let xVal = e.pageX;
+    let yVal = e.pageY ;
+    if (xVal - elemLeft > 20 && xVal - elemLeft < 45 && yVal - elemTop > cvs.height - 60 && yVal - elemTop < cvs.height - 10) {
+        audioManager()
+      }
+   });
 
 function audioManager() {
-    let imgSrc = soundElement.src;
-    console.log(components.SOUND_ON.src, imgSrc);
-    
-    let SOUND_IMG = imgSrc == components.SOUND_ON.src ? components.SOUND_OFF.src : components.SOUND_ON.src;
-
-    soundElement.setAttribute('src', SOUND_IMG);
-
+    SOUND_IMG = SOUND_IMG  == components.SOUND_ON ? components.SOUND_OFF : components.SOUND_ON;
     //mute and unmute sounds
     components.WALL_HIT.muted = components.WALL_HIT.muted ? false : true;
     components.LIFE_LOST.muted = components.LIFE_LOST.muted ? false : true;
